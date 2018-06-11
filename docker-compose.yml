@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: 7glyphs-nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    volumes:
+      - .:/7glyphs
+    ports:
+      - "80:80"
+    links:
+      - app
+      - db
+  app:
+    container_name: 7glyphs-app
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    volumes:
+      - .:/7glyphs
+  db:
+    container_name: 7glyphs-db
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    volumes:
+      - .:/7glyphs
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 7glyphs
+      POSTGRES_USER: 7glyphs
+      POSTGRES_DB: 7glyphs
+  adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8080:8080
